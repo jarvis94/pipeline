@@ -1,4 +1,4 @@
-# pipeline
+# Pipeline Processor
 pipeline EE739
 
 Vineesh A.S.V
