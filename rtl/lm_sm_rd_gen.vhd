@@ -2,6 +2,7 @@
 ----------------------------------------
 --inputs imm_8 8 bit --> from if/id.imm
 --		 if_id_val   --> validity of if/id pipeline reg
+--		 id_lm_sm    --> from control decoder indication of the decoded instruction being lm/sm 
 --outputs rd        --> decoded destination/source address
 --		  stall     --> to hazard detector
 --        imm_8_fb  --> corrected imm_8 for next decoding
@@ -15,7 +16,7 @@ entity lm_sm_rd_gen is
 		rd: out std_logic_vector(2 downto 0);
 		imm_8_fb: out std_logic_vector(7 downto 0);
 		stall: out std_logic;
-		if_id_val: in std_logic);
+		if_id_val,id_lm_sm: in std_logic);
 end lm_sm_rd_gen;
 
 architecture behave of lm_sm_rd_gen is
@@ -64,13 +65,13 @@ with rd_sig select
 imm_8_fb_sig <= imm_8 and decode_out;
 imm_8_fb <= imm_8_fb_sig;
 -- stall process
-stall_proc: process(imm_8_fb_sig,if_id_val)
+stall_proc: process(imm_8_fb_sig,if_id_val,id_lm_sm)
 variable fb_var: std_logic;
 begin
 	fb_var := imm_8_fb_sig(0);
 	for i in 0 to 6 loop
 		fb_var := fb_var or imm_8_fb_sig(i+1);
 	end loop;
-	stall <= fb_var and if_id_val;
+	stall <= fb_var and if_id_val and id_lm_sm;
 end process;		
 end behave;
