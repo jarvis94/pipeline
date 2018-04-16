@@ -2,14 +2,14 @@
 --------------------------------------
 --inputs
 
--- wr_en_reg
--- rr_exe_load
--- rr_rs_en
--- id_rr_beq
--- comp_out
--- id_rr_jlr
--- id_jal
--- id_stall_lm_sm
+-- wr_en_reg -- from wb stage
+-- rr_exe_load -- from rr_exe pipe
+-- rr_rs_en -- number of source registers in id_rr pipe
+-- id_rr_beq -- from id_rr pipe
+-- comp_out -- comparator output from rr stage
+-- id_rr_jlr -- from id_rr pipe
+-- id_jal -- from controller
+-- id_stall_lm_sm -- from lm_sm_rd_gen
 
 -- outputs
 
