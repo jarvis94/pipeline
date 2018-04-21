@@ -38,7 +38,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '0';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '0';
+                EXE_Oper        <= '1';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -67,7 +67,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '0';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '0';
+                EXE_Oper        <= '1';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -96,7 +96,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '0';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '0';
+                EXE_Oper        <= '1';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -126,7 +126,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '1';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '0';
+                EXE_Oper        <= '1';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -156,7 +156,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '0';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '1';
+                EXE_Oper        <= '0';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -185,7 +185,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '0';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '1';
+                EXE_Oper        <= '0';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -214,7 +214,7 @@ Architecture behav of control_decoder is
                 EXE_scr2_1      <= '0';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
-                EXE_Oper        <= '1';
+                EXE_Oper        <= '0';
                 EXE_data        <= '1';
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '0';
@@ -278,7 +278,7 @@ Architecture behav of control_decoder is
                 EXE_Memaddr     <= '-';
                 EXE_LW          <= '1';
                 RR_rs1_sel      <= '0';
-                RR_src1_sel     <= '0';
+                RR_src1_sel     <= '1';
                 RR_jlr          <= '0';
                 RR_br           <= '0';
                 RR_Sw           <= '0';
@@ -286,7 +286,7 @@ Architecture behav of control_decoder is
                 RR_Rs_en        <= "10";
                 ID_jal          <= '0';
                 ID_lm_sm        <= '0';
-                ID_Rd_sel       <= "00";    --not sure, think its checked
+                ID_Rd_sel       <= "01";    --not sure, think its checked
 
             elsif( opcode = b"01_01" ) then  --SW
                 WB_C_Check      <= '0';
@@ -299,7 +299,7 @@ Architecture behav of control_decoder is
                 MEM_RD_en       <= '0';
                 MEM_Wr_en       <= '1';
                 MEM_dat         <= '-';
-                EXE_scr1        <= '1';
+                EXE_scr1        <= '0';
                 EXE_scr2_1      <= '1';
                 EXE_scr2_2      <= '-';
                 EXE_scr2_3      <= '0';
@@ -329,7 +329,7 @@ Architecture behav of control_decoder is
                 MEM_RD_en       <= '1';
                 MEM_Wr_en       <= '0';
                 MEM_dat         <= '0';
-                EXE_scr1        <= '1';
+                EXE_scr1        <= '0';
                 EXE_scr2_1      <= '-';
                 EXE_scr2_2      <= '1';
                 EXE_scr2_3      <= '1';
@@ -359,13 +359,13 @@ Architecture behav of control_decoder is
                 MEM_RD_en       <= '0';
                 MEM_Wr_en       <= '1';
                 MEM_dat         <= '-';
-                EXE_scr1        <= '1';
+                EXE_scr1        <= '0';
                 EXE_scr2_1      <= '-';
                 EXE_scr2_2      <= '1';
                 EXE_scr2_3      <= '1';
                 EXE_Oper        <= '1';
                 EXE_data        <= '1';
-                EXE_Memaddr     <= '-';
+                EXE_Memaddr     <= '1';
                 EXE_LW          <= '0';
                 RR_rs1_sel      <= '0';
                 RR_src1_sel     <= '1';
@@ -376,7 +376,7 @@ Architecture behav of control_decoder is
                 RR_Rs_en        <= "11";
                 ID_jal          <= '0';
                 ID_lm_sm        <= '1';
-                ID_Rd_sel       <= "--";
+                ID_Rd_sel       <= "11";
 
 
             elsif( opcode = b"11_00" ) then  --BEQ
@@ -421,7 +421,7 @@ Architecture behav of control_decoder is
                 MEM_RD_en       <= '0';
                 MEM_Wr_en       <= '0';
                 MEM_dat         <= '1';
-                EXE_scr1        <= '0';
+                EXE_scr1        <= '1';
                 EXE_scr2_1      <= '-';
                 EXE_scr2_2      <= '0';
                 EXE_scr2_3      <= '1';
@@ -470,6 +470,35 @@ Architecture behav of control_decoder is
                 ID_jal          <= '0';
                 ID_lm_sm        <= '0';
                 ID_Rd_sel       <= "--";
+            else
+                WB_C_Check      <= '0';
+                WB_Z_Check      <= '0';
+                WB_C_Wr         <= '0';   
+                WB_Z_Wr         <= '0';
+                WB_RegWr        <= '0';
+                MEM_data_in_sel <= '0';
+                MEM_addr_sel    <= '0';
+                MEM_RD_en       <= '0';
+                MEM_Wr_en       <= '0';
+                MEM_dat         <= '0';
+                EXE_scr1        <= '0';
+                EXE_scr2_1      <= '0';
+                EXE_scr2_2      <= '0';
+                EXE_scr2_3      <= '0';
+                EXE_Oper        <= '0';
+                EXE_data        <= '0';
+                EXE_Memaddr     <= '0';
+                EXE_LW          <= '0';
+                RR_rs1_sel      <= '0';
+                RR_src1_sel     <= '0';
+                RR_jlr          <= '0';
+                RR_br           <= '0';
+                RR_Sw           <= '0';
+                RR_scr2_sel     <= "00";
+                RR_Rs_en        <= "00";
+                ID_jal          <= '0';
+                ID_lm_sm        <= '0';
+                ID_Rd_sel       <= "00";    
 
               end if;
 
