@@ -7,11 +7,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;               -- for type conversions
 
-entity register_w is 
+entity register_w is
 generic(W: integer:=16);
 port (
     Wr_data     :in std_logic_vector(W-1 downto 0);
-    clk,reset   :in std_logic;
+    clk,reset,wr_en   :in std_logic;
     Reg_data    :out std_logic_vector(W-1 downto 0));
 end register_w;         
 
@@ -25,7 +25,8 @@ begin
     if reset='1' then
 		  --Reg_data <= x"0000";
         Reg_data <= std_logic_vector(to_unsigned(0,W));
-    else
+   
+    elsif (wr_en ='1') then
         Reg_data <=Wr_data;
     end if;
     
@@ -33,3 +34,4 @@ begin
   
 end process postive_edge;
 end behav;
+
