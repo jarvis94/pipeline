@@ -9,6 +9,9 @@
 -- rr_exe_val -- validity of rr_exe -- from rr_exe_pipe
 -- exe_mem_val -- validity of exe_mem -- from exe_mem_pipe
 -- mem_wb_val -- validity of mem_wb -- from mem_wb_pipe
+-- exe_wb -- indicator of valid register wb in exe stage -- from rr_exe_pipe
+-- mem_wb -- indicator of valid register wb in mem stage -- from exe_mem_pipe
+-- wb_wb -- indicator of valid register wb in wb stage -- from mem_exe_pipe
 -- rr_rs_en -- indicator of source registers -- from id_rr_pipe
 -- exe_rd -- destination reg in exe stage -- from rr_exe_pipe
 -- mem_rd -- destination reg in mem stage -- from exe_mem_pipe
@@ -28,7 +31,7 @@ use ieee.numeric_std.all;
 
 entity fdu is
 	port (
-		exe_lw,rr_sw,exe_stall_lm_sm,rr_exe_val,exe_mem_val,mem_wb_val : in std_logic;
+		exe_lw,rr_sw,exe_stall_lm_sm,rr_exe_val,exe_mem_val,mem_wb_val,exe_wb,mem_wb,wb_wb : in std_logic;
 		rr_rs_en: in std_logic_vector(1 downto 0);
 		exe_rd,mem_rd,wb_rd,rs2,rs1: in std_logic_vector(2 downto 0);
 		fwd_s1,fwd_s2: out std_logic_vector(2 downto 0)
@@ -43,36 +46,36 @@ begin
 
 --process to detect data dependencies and compute forward logic
 --priority of dependencies -> exe,mem,wb ; exe has the highest priority 
-detect_match:process(exe_lw,rr_sw,exe_stall_lm_sm,rr_exe_val,exe_mem_val,mem_wb_val,
+detect_match:process(exe_lw,rr_sw,exe_stall_lm_sm,rr_exe_val,exe_mem_val,mem_wb_val,exe_wb,mem_wb,wb_wb,
 	rr_rs_en,exe_rd,mem_rd,wb_rd,rs2,rs1)
 begin
 	if (rr_rs_en = "11") then
 		-- ignores data dependencies when exe_lw = 1
-		if (exe_rd = rs1 and exe_rd = rs2 and exe_lw = '0' and rr_exe_val = '1') then
+		if (exe_rd = rs1 and exe_rd = rs2 and exe_lw = '0' and rr_exe_val = '1' and exe_wb = '1') then
 			fwd_s1_m <= "001";-- forward from exe out
 			fwd_s2_m <= "001";		
-		elsif (exe_rd = rs1 and exe_lw = '0' and rr_exe_val = '1') then
+		elsif (exe_rd = rs1 and exe_lw = '0' and rr_exe_val = '1' and exe_wb = '1') then
 			fwd_s1_m <= "001";
 			fwd_s2_m <= "000";
-		elsif (exe_rd = rs2 and exe_lw = '0' and rr_exe_val = '1') then
+		elsif (exe_rd = rs2 and exe_lw = '0' and rr_exe_val = '1' and exe_wb = '1') then
 			fwd_s1_m <= "000";
 			fwd_s2_m <= "001";
-		elsif (mem_rd = rs1 and mem_rd = rs2 and exe_mem_val = '1') then
+		elsif (mem_rd = rs1 and mem_rd = rs2 and exe_mem_val = '1' and mem_wb = '1') then
 			fwd_s1_m <= "010"; -- forward from mem out
 			fwd_s2_m <= "010";
-		elsif (mem_rd = rs1 and exe_mem_val = '1') then
+		elsif (mem_rd = rs1 and exe_mem_val = '1' and mem_wb = '1') then
 			fwd_s1_m <= "010";
 			fwd_s2_m <= "000";
-		elsif (mem_rd = rs2 and exe_mem_val = '1') then
+		elsif (mem_rd = rs2 and exe_mem_val = '1' and mem_wb = '1') then
 			fwd_s1_m <= "000"; 
 			fwd_s2_m <= "010";
-		elsif (wb_rd = rs1 and wb_rd = rs2 and mem_wb_val = '1') then
+		elsif (wb_rd = rs1 and wb_rd = rs2 and mem_wb_val = '1' and wb_wb = '1') then
 			fwd_s1_m <= "011";-- forward from wb out
 			fwd_s2_m <= "011";
-		elsif (wb_rd = rs1 and mem_wb_val = '1') then
+		elsif (wb_rd = rs1 and mem_wb_val = '1' and wb_wb = '1') then
 			fwd_s1_m <= "011";
 			fwd_s2_m <= "000";
-		elsif (wb_rd = rs2 and mem_wb_val = '1') then
+		elsif (wb_rd = rs2 and mem_wb_val = '1' and wb_wb = '1') then
 			fwd_s1_m <= "000";
 			fwd_s2_m <= "011";
 		elsif (rs1 = "111" and rs2 = "111") then
@@ -92,11 +95,11 @@ begin
 			fwd_s2_m <= "000";
 		-- when exe_stall_lm_sm is 1 data dependcies are ignored
 		--
-		if (exe_rd = rs1 and exe_stall_lm_sm = '0' and rr_exe_val = '1') then
+		if (exe_rd = rs1 and exe_stall_lm_sm = '0' and rr_exe_val = '1' and exe_wb = '1') then
 			fwd_s1_m <= "001";			
-		elsif (mem_rd = rs1 and exe_stall_lm_sm = '0' and exe_mem_val = '1') then
+		elsif (mem_rd = rs1 and exe_stall_lm_sm = '0' and exe_mem_val = '1' and mem_wb = '1') then
 			fwd_s1_m <= "010";
-		elsif (wb_rd = rs1 and exe_stall_lm_sm = '0' and mem_wb_val = '1') then
+		elsif (wb_rd = rs1 and exe_stall_lm_sm = '0' and mem_wb_val = '1' and wb_wb = '1') then
 			fwd_s1_m <= "011";
 		elsif (rs1 = "111") then
 			fwd_s1_m <= "100";
@@ -105,11 +108,11 @@ begin
 		end if;
 	elsif (rr_rs_en = "10") then
 			fwd_s1_m <= "000";
-		if (exe_rd = rs2 and rr_exe_val = '1') then
+		if (exe_rd = rs2 and rr_exe_val = '1' and exe_wb = '1') then
 			fwd_s2_m <= "001";
-		elsif (mem_rd = rs2 and exe_mem_val = '1') then
+		elsif (mem_rd = rs2 and exe_mem_val = '1' and mem_wb = '1') then
 			fwd_s2_m <= "010";
-		elsif (wb_rd = rs2 and mem_wb_val = '1') then
+		elsif (wb_rd = rs2 and mem_wb_val = '1' and wb_wb = '1') then
 			fwd_s2_m <= "011";
 		elsif (rs2 = "111") then
 			fwd_s2_m <= "100";
